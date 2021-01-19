@@ -1,0 +1,381 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "JD-chain区块链检索API文档参考",
+    "version": "1.0.0",
+    "title": "区块链检索API",
+    "termsOfService": "",
+    "contact": {
+      "email": "xxx@jd.com"
+    }
+  },
+  "host": "[[api_host]]",
+  "tags": [
+    {
+      "name": "search",
+      "description": "通过关键字搜索区块数据"
+    },
+    {
+      "name": "query",
+      "description": "浏览区块数据"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/ledgers/{ledger}/all/search": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "summary": "搜索区块链",
+        "description": "通过关键字搜索区块数据，支持区块哈希，交易哈希，用户公钥和地址，合约公钥和地址，数据账户哈希和地址，写操作键值内容的搜索",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "关键字",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "ledger",
+            "in": "path",
+            "required": true,
+            "description": "所要搜索的账本",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/ledgers/{ledger}/blocks/search": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "根据哈希查询区块",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": " 区块哈希的全部或者一部分",
+            "type": "string"
+          },
+          {
+            "name": "ledger",
+            "in": "path",
+            "required": true,
+            "description": "所要搜索的账本",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/ledgers/{ledger}/txs/search": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "根据哈希查询交易",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": " 全部或者部分的交易哈希",
+            "type": "string"
+          },
+          {
+            "name": "ledger",
+            "in": "path",
+            "required": true,
+            "description": "所要搜索的账本",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/ledgers/{ledger}/users/search": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "用户查询",
+        "description": "用户有公钥和地址两个属性，可以通过公钥或者地址查找特定用户，也可以返回全部用户的列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": " 用户的公钥或者地址的全部或者部分",
+            "type": "string"
+          },
+          {
+            "name": "ledger",
+            "in": "path",
+            "required": true,
+            "description": "所要搜索的账本",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/ledgers/{ledger}/contracts/search": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "合约查询",
+        "description": "合约有公钥和地址两个属性，可以通过合约的这两个属性查询特定合约，也可以返回一个当前所有合约的列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": " 合约的公钥或者地址的全部或者一部分",
+            "type": "string"
+          },
+          {
+            "name": "ledger",
+            "in": "path",
+            "required": true,
+            "description": "所要搜索的账本",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/ledgers/{ledger}/accounts/search": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "查询数据账户",
+        "description": "数据账户有公钥和地址两个属性，可以通过账户的两个属性查询特定账户，也可以返回一个当前所有账户的列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": " 数据账户的公钥或者地址的全部或者部分，或者KV中的key",
+            "type": "string"
+          },
+          {
+            "name": "ledger",
+            "in": "path",
+            "required": true,
+            "description": "所要搜索的账本",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true,
+          "description": "如果成功返回 true，否则返回false"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "errorCode": {
+              "type": "integer",
+              "description": "错误码"
+            },
+            "errorMessage": {
+              "type": "string",
+              "description": "出错信息提示"
+            }
+          },
+          "description": "具体的错误信息，当访问出错时返回"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "blocks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Block"
+              }
+            },
+            "txs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tx"
+              }
+            },
+            "users": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "datasets": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Dataset"
+              }
+            },
+            "contracts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Contract"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Block": {
+      "type": "object",
+      "properties": {
+        "hash_id": {
+          "type": "string"
+        },
+        "height": {
+          "type": "number"
+        }
+      }
+    },
+    "Tx": {
+      "type": "object",
+      "properties": {
+        "hash_id": {
+          "type": "string"
+        },
+        "index_in_block": {
+          "type": "number"
+        },
+        "block_height": {
+          "type": "number"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "public_key": {
+          "type": "string"
+        }
+      }
+    },
+    "Contract": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "public_key": {
+          "type": "string"
+        }
+      }
+    },
+    "Dataset": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "public_key": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

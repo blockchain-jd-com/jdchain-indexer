@@ -1,0 +1,694 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "JD-chain Query API Document",
+    "version": "1.0.0",
+    "title": "Query API",
+    "termsOfService": "",
+    "contact": {
+      "email": "xxx@jd.com"
+    }
+  },
+  "host": "[[api_host]]",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "search",
+      "description": "search block chain by keyword"
+    },
+    {
+      "name": "query",
+      "description": "query block chain data"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/search": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "summary": "",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "keyword",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/block": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query block",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": "the keyword is part of block's hash",
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/block/range": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query block in range",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "start at block height",
+            "type": "number"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "end to block height",
+            "type": "number"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/tx": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query transactions",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": "the keyword is part of transaction's hash",
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/tx/range": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query transactions in range",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "height",
+            "in": "query",
+            "required": true,
+            "description": "block height the transactions in",
+            "type": "number"
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "start at index in block",
+            "type": "number"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "end to index in block",
+            "type": "number"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/user": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query users",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": "the keyword is part of user's public key or address; if keyword is '\\_all_' , then all users will be returned",
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/contract": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query contract by public key or address",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": "the keyword is part of contract's public key or address; if keyword is '\\_all_'  , then all contracts will be returned",
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/dataset": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query dataset by public key or address",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": "the keyword is part of dataset's public key or address; if keyword is '\\_all_'  , then all datasets will be returned",
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/writeset/key": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query writeset by key name",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "description": "the key is writeset's key name",
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/writeset/tx": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query writesets in transaction by transaction hash",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": "the keyword is part of transaction's hash",
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/writeset/key/version": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query writeset by key name and version",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "description": "the key is writeset's key name",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": true,
+            "description": "the version is writeset's version of specified key",
+            "type": "number"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/writeset/dataset": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query writesets in dataset",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "description": "the keyword is part of dataset's public key or address",
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/query/dataset/writeset": {
+      "get": {
+        "tags": [
+          "query"
+        ],
+        "summary": "query datasets by writeset's key name",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "description": "the key is writeset's key name",
+            "type": "string"
+          },
+          {
+            "name": "ledgers",
+            "in": "query",
+            "required": true,
+            "description": "range of ledgers to search in, seperate by comma, for example: abc,def",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "message": {
+          "type": "string",
+          "description": "if error happends, show the error infomation, or OK",
+          "default": "OK"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "blocks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Block"
+              }
+            },
+            "txs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tx"
+              }
+            },
+            "users": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "datasets": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Dataset"
+              }
+            },
+            "contracts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Contract"
+              }
+            },
+            "kvs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/KV"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Block": {
+      "type": "object",
+      "properties": {
+        "hash_id": {
+          "type": "string"
+        },
+        "height": {
+          "type": "number"
+        }
+      }
+    },
+    "Tx": {
+      "type": "object",
+      "properties": {
+        "hash_id": {
+          "type": "string"
+        },
+        "index_in_block": {
+          "type": "number"
+        },
+        "block_height": {
+          "type": "number"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "public_key": {
+          "type": "string"
+        }
+      }
+    },
+    "Contract": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "public_key": {
+          "type": "string"
+        }
+      }
+    },
+    "Dataset": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "public_key": {
+          "type": "string"
+        }
+      }
+    },
+    "KV": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "version": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
