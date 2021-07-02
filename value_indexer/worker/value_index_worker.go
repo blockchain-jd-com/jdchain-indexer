@@ -295,7 +295,7 @@ func (builder *KVSchemaBuilder) Build(src string) (mutations dgraph_helper.Mutat
 		}
 
 		for _, op := range operations.Array() {
-			if op.Get("accountAddress.value").String() != builder.schemaInfo.AssociateAccount {
+			if op.Get("accountAddress").String() != builder.schemaInfo.AssociateAccount {
 				continue
 			}
 
@@ -304,7 +304,7 @@ func (builder *KVSchemaBuilder) Build(src string) (mutations dgraph_helper.Mutat
 				continue
 			}
 			for _, ws := range wsets.Array() {
-				value := ws.Get("value.bytes.value").String()
+				value := ws.Get("value.bytes").String()
 				decoded, err := base58.Decode(value)
 				if err != nil {
 					logger.Warnf("decode %s, got error %s", value, err)

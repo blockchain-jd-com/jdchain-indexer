@@ -144,7 +144,7 @@ func doContractQuery(ql *QueryLang, args map[string]interface{}, client *dgo.Dgr
 func parseContractInfo(result gjson.Result) (contracts Contracts) {
 	for _, raw := range result.Array() {
 		var contract Contract
-		contract.Address = AddressValue{raw.Get("contract-address").String()}
+		contract.Address = raw.Get("contract-address").String()
 		contract.PublicKey = raw.Get("contract-public_key").String()
 		contracts = append(contracts, contract)
 	}

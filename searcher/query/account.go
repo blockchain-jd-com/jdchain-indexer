@@ -167,7 +167,7 @@ func doDatasetQuery(ql QueryAssembler, args map[string]interface{}, client *dgo.
 func parseDatasetInfo(result gjson.Result) (sets Accounts) {
 	for _, setRaw := range result.Array() {
 		var set Account
-		set.Address = AddressValue{setRaw.Get("dataset-address").String()}
+		set.Address = setRaw.Get("dataset-address").String()
 		set.PublicKey = setRaw.Get("dataset-public_key").String()
 		sets = append(sets, &set)
 	}

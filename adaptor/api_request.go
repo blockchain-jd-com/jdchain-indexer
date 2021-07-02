@@ -67,7 +67,7 @@ func GetAccountsFromServer(apiHost, ledgerID string) ([]DataAccountOperation, er
 	var accounts []DataAccountOperation
 	for _, raw := range result.Array() {
 		var account DataAccountOperation
-		account.Address = raw.Get("address.value").String()
+		account.Address = raw.Get("address").String()
 		account.PublicKey = raw.Get("pubKey").String()
 		accounts = append(accounts, account)
 	}
@@ -92,7 +92,7 @@ func GetContractsFromServer(apiHost, ledgerID string) ([]ContractDeployOperation
 	var contracts []ContractDeployOperation
 	for _, raw := range result.Array() {
 		var contract ContractDeployOperation
-		contract.Address = raw.Get("address.value").String()
+		contract.Address = raw.Get("address").String()
 		contract.PublicKey = raw.Get("pubKey").String()
 		contracts = append(contracts, contract)
 	}
@@ -117,7 +117,7 @@ func GetUsersFromServer(apiHost, ledgerID string) ([]UserOperation, error) {
 	var users []UserOperation
 	for _, raw := range result.Array() {
 		var user UserOperation
-		user.Address = raw.Get("address.value").String()
+		user.Address = raw.Get("address").String()
 		user.PublicKey = raw.Get("pubKey").String()
 		users = append(users, user)
 	}
@@ -195,12 +195,12 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 		operationIndex++
 		ws := contentResult.Get("writeSet")
 		if ws.Exists() {
-			address := contentResult.Get("accountAddress.value").String()
+			address := contentResult.Get("accountAddress").String()
 			wo := newWriteOperation()
 			for _, historyResult := range ws.Array() {
 				key := historyResult.Get("key").String()
 				valueType := historyResult.Get("value.type").String()
-				value := historyResult.Get("value.bytes.value").String()
+				value := historyResult.Get("value.bytes").String()
 				version := historyResult.Get("expectedVersion").Int()
 				wo.addHistory(txHash, operationIndex, address, WriteValueType(valueType), key, value, version)
 			}
@@ -211,7 +211,7 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 		userID := contentResult.Get("userID")
 		if userID.Exists() {
 			uo := newUserOperation(
-				contentResult.Get("userID.address.value").String(),
+				contentResult.Get("userID.address").String(),
 				contentResult.Get("userID.pubKey").String(),
 			)
 			contents = append(contents, uo)
@@ -221,7 +221,7 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 		accountID := contentResult.Get("accountID")
 		if accountID.Exists() {
 			uo := newDataAccountOperation(
-				contentResult.Get("accountID.address.value").String(),
+				contentResult.Get("accountID.address").String(),
 				contentResult.Get("accountID.pubKey").String(),
 			)
 			contents = append(contents, uo)
@@ -231,7 +231,7 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 		contractID := contentResult.Get("contractID")
 		if contractID.Exists() {
 			uo := newContractDeployOperation(
-				contentResult.Get("contractID.address.value").String(),
+				contentResult.Get("contractID.address").String(),
 				contentResult.Get("contractID.pubKey").String(),
 				contentResult.Get("chainCodeVersion").Int())
 			contents = append(contents, uo)
@@ -243,7 +243,7 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 			uo := newContractEventOperation(
 				txHash,
 				operationIndex,
-				contentResult.Get("contractAddress.value").String(),
+				contentResult.Get("contractAddress").String(),
 				contentResult.Get("version").Int(),
 				contentResult.Get("event").String(),
 				contentResult.Get("args").Raw)
@@ -254,7 +254,7 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 		eventAccountID := contentResult.Get("eventAccountID")
 		if eventAccountID.Exists() {
 			uo := newEventAccountOperation(
-				contentResult.Get("eventAccountID.address.value").String(),
+				contentResult.Get("eventAccountID.address").String(),
 				contentResult.Get("eventAccountID.pubKey").String(),
 			)
 			contents = append(contents, uo)
@@ -263,12 +263,12 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 
 		events := contentResult.Get("events")
 		if events.Exists() {
-			eventAddress := contentResult.Get("eventAddress.value").String()
+			eventAddress := contentResult.Get("eventAddress").String()
 			eo := newEventOperation()
 			for _, historyResult := range events.Array() {
 				topic := historyResult.Get("name").String()
 				valueType := historyResult.Get("content.type").String()
-				content := historyResult.Get("content.bytes.value").String()
+				content := historyResult.Get("content.bytes").String()
 				sequence := historyResult.Get("sequence").Int()
 				eo.addHistory(txHash, operationIndex, eventAddress, WriteValueType(valueType), topic, content, sequence)
 			}

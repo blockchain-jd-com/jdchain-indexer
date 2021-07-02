@@ -154,7 +154,7 @@ func doEventAccountQuery(ql QueryAssembler, args map[string]interface{}, client 
 func parseEventAccountInfo(result gjson.Result) (sets EventAccounts) {
 	for _, setRaw := range result.Array() {
 		var set EventAccount
-		set.Address = AddressValue{setRaw.Get("event_account-address").String()}
+		set.Address = setRaw.Get("event_account-address").String()
 		set.PublicKey = setRaw.Get("event_account-public_key").String()
 		sets = append(sets, &set)
 	}

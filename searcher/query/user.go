@@ -148,7 +148,7 @@ func doUsersQuery(ql *QueryLang, args map[string]interface{}, client *dgo.Dgraph
 func parseUserInfo(result gjson.Result) (users Users) {
 	for _, userRaw := range result.Array() {
 		var user User
-		user.Address = AddressValue{userRaw.Get("user-address").String()}
+		user.Address = userRaw.Get("user-address").String()
 		user.PublicKey = userRaw.Get("user-public_key").String()
 		users = append(users, &user)
 	}
