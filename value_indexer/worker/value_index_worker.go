@@ -1,10 +1,10 @@
 package worker
 
 import (
+	"encoding/base64"
 	"fmt"
 	"git.jd.com/jd-blockchain/explorer/dgraph_helper"
 	"git.jd.com/jd-blockchain/explorer/value_indexer/schema"
-	"github.com/mr-tron/base58"
 	"github.com/tidwall/gjson"
 	"io"
 	"strconv"
@@ -288,7 +288,7 @@ func (builder *KVSchemaBuilder) Build(src string) (mutations dgraph_helper.Mutat
 		if tx.Get("result.executionState").String() != "SUCCESS" {
 			continue
 		}
-		txTime := data.Get("request.transactionContent.timestamp").Int()
+		txTime := tx.Get("request.transactionContent.timestamp").Int()
 		operations := tx.Get("request.transactionContent.operations")
 		if operations.Exists() == false {
 			continue
@@ -305,7 +305,7 @@ func (builder *KVSchemaBuilder) Build(src string) (mutations dgraph_helper.Mutat
 			}
 			for _, ws := range wsets.Array() {
 				value := ws.Get("value.bytes").String()
-				decoded, err := base58.Decode(value)
+				decoded, err := base64.StdEncoding.DecodeString(value)
 				if err != nil {
 					logger.Warnf("decode %s, got error %s", value, err)
 					continue
