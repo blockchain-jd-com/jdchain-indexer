@@ -173,7 +173,14 @@ func parseTransaction(result gjson.Result, blockHeight, startIndex int64) *Trans
 	// 仅记录成功交易的操作内容
 	if tx.IsSuccess() {
 		operationsResult := result.Get("request.transactionContent.operations")
-		tx.Contents = parseOperations(tx.Hash, operationsResult)
+		if operationsResult.Exists() {
+			operations := operationsResult.Array()
+			derivedOperations := result.Get("result.derivedOperations")
+			if derivedOperations.Exists() {
+				operations = append(operations, derivedOperations.Array()...)
+			}
+			tx.Contents = parseOperations(tx.Hash, operations)
+		}
 	}
 	tx.NodePublicKey = parsePublicKeys(result.Get("request.nodeSignatures"))
 	tx.EndpointPublicKey = parsePublicKeys(result.Get("request.endpointSignatures"))
@@ -188,13 +195,15 @@ func parsePublicKeys(result gjson.Result) (list []string) {
 	return
 }
 
-func parseOperations(txHash string, result gjson.Result) []interface{} {
+func parseOperations(txHash string, operations []gjson.Result) []interface{} {
 	var contents []interface{}
 	operationIndex := int64(0)
-	for _, contentResult := range result.Array() {
+	for _, contentResult := range operations {
 		operationIndex++
-		ws := contentResult.Get("writeSet")
-		if ws.Exists() {
+		opType := contentResult.Get("@type").String()
+		switch opType {
+		case "com.jd.blockchain.ledger.DataAccountKVSetOperation": // KV 写入
+			ws := contentResult.Get("writeSet")
 			address := contentResult.Get("accountAddress").String()
 			wo := newWriteOperation()
 			for _, historyResult := range ws.Array() {
@@ -205,41 +214,25 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 				wo.addHistory(txHash, operationIndex, address, WriteValueType(valueType), key, value, version)
 			}
 			contents = append(contents, wo)
-			continue
-		}
-
-		userID := contentResult.Get("userID")
-		if userID.Exists() {
+		case "com.jd.blockchain.ledger.UserRegisterOperation": // 用户注册
 			uo := newUserOperation(
 				contentResult.Get("userID.address").String(),
 				contentResult.Get("userID.pubKey").String(),
 			)
 			contents = append(contents, uo)
-			continue
-		}
-
-		accountID := contentResult.Get("accountID")
-		if accountID.Exists() {
+		case "com.jd.blockchain.ledger.DataAccountRegisterOperation": // 数据账户注册
 			uo := newDataAccountOperation(
 				contentResult.Get("accountID.address").String(),
 				contentResult.Get("accountID.pubKey").String(),
 			)
 			contents = append(contents, uo)
-			continue
-		}
-
-		contractID := contentResult.Get("contractID")
-		if contractID.Exists() {
+		case "com.jd.blockchain.ledger.ContractCodeDeployOperation": // 合约部署 TODO 合约升级操作
 			uo := newContractDeployOperation(
 				contentResult.Get("contractID.address").String(),
 				contentResult.Get("contractID.pubKey").String(),
 				contentResult.Get("chainCodeVersion").Int())
 			contents = append(contents, uo)
-			continue
-		}
-
-		contractAddress := contentResult.Get("contractAddress")
-		if contractAddress.Exists() {
+		case "com.jd.blockchain.ledger.ContractEventSendOperation": // 合约调用
 			uo := newContractEventOperation(
 				txHash,
 				operationIndex,
@@ -248,21 +241,14 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 				contentResult.Get("event").String(),
 				contentResult.Get("args").Raw)
 			contents = append(contents, uo)
-			continue
-		}
-
-		eventAccountID := contentResult.Get("eventAccountID")
-		if eventAccountID.Exists() {
+		case "com.jd.blockchain.ledger.EventAccountRegisterOperation": // 事件账户注册
 			uo := newEventAccountOperation(
 				contentResult.Get("eventAccountID.address").String(),
 				contentResult.Get("eventAccountID.pubKey").String(),
 			)
 			contents = append(contents, uo)
-			continue
-		}
-
-		events := contentResult.Get("events")
-		if events.Exists() {
+		case "com.jd.blockchain.ledger.EventPublishOperation": // 事件发布
+			events := contentResult.Get("events")
 			eventAddress := contentResult.Get("eventAddress").String()
 			eo := newEventOperation()
 			for _, historyResult := range events.Array() {
@@ -273,7 +259,6 @@ func parseOperations(txHash string, result gjson.Result) []interface{} {
 				eo.addHistory(txHash, operationIndex, eventAddress, WriteValueType(valueType), topic, content, sequence)
 			}
 			contents = append(contents, eo)
-			continue
 		}
 	}
 	return contents

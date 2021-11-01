@@ -290,17 +290,23 @@ func (builder *KVSchemaBuilder) Build(src string) (mutations dgraph_helper.Mutat
 		}
 		txTime := tx.Get("request.transactionContent.timestamp").Int()
 		operations := tx.Get("request.transactionContent.operations")
-		if operations.Exists() == false {
+		if !operations.Exists() {
 			continue
 		}
-
-		for _, op := range operations.Array() {
+		ops := operations.Array()
+		derivedOperations := tx.Get("result.derivedOperations")
+		if derivedOperations.Exists() {
+			ops = append(ops, derivedOperations.Array()...)
+		}
+		for _, op := range ops {
+			if op.Get("@type").String() != "com.jd.blockchain.ledger.DataAccountKVSetOperation" {
+				continue
+			}
 			if op.Get("accountAddress").String() != builder.schemaInfo.AssociateAccount {
 				continue
 			}
-
 			wsets := op.Get("writeSet")
-			if wsets.Exists() == false {
+			if !wsets.Exists() {
 				continue
 			}
 			for _, ws := range wsets.Array() {
