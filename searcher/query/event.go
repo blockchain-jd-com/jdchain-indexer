@@ -107,8 +107,7 @@ func NewEventAccountHasKeyOrHasAddressQuery(ledgers []string, keyword string, fr
 		count = MaxRecordsPerRequest
 	}
 	return &EventAccountQuery{
-		lang: newQueryLangGroup().
-			addQuery(newQueryLang(qlNameEventAccountByHash, qlEventAccountQueryResultName)),
+		lang: newQueryLang(qlNameEventAccountByHash, qlEventAccountQueryResultName),
 		args: map[string]interface{}{
 			"keyword": keyword,
 			"count":   strconv.FormatInt(count, 10),
@@ -119,7 +118,7 @@ func NewEventAccountHasKeyOrHasAddressQuery(ledgers []string, keyword string, fr
 }
 
 type EventAccountQuery struct {
-	lang QueryAssembler
+	lang *QueryLang
 	args map[string]interface{}
 }
 

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"errors"
 	"git.jd.com/jd-blockchain/explorer/response"
 	"git.jd.com/jd-blockchain/explorer/searcher/query"
 	"github.com/gin-gonic/gin"
@@ -12,7 +11,7 @@ import (
 func HandleQueryContractRange(c *gin.Context) {
 	var obj struct {
 		Ledgers string `form:"ledgers"`
-		From    int64  `form:"from"`
+		From    int64  `form:"fromIndex"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}
@@ -49,7 +48,7 @@ func HandleQueryContractCountByHash(c *gin.Context) {
 func HandleQueryContractByHash(c *gin.Context) {
 	var obj struct {
 		Keyword string `form:"keyword"`
-		From    int64  `form:"from"`
+		From    int64  `form:"fromIndex"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}
@@ -61,12 +60,7 @@ func HandleQueryContractByHash(c *gin.Context) {
 
 	ledgers := parseLedgers(c.Param("ledger"))
 
-	if len(strings.TrimSpace(obj.Keyword)) < 20 {
-		res := response.NewResponse(nil, errors.New("length of keyword must >= 20"))
-		c.JSON(http.StatusOK, res)
-	} else {
-		qe := query.NewQueryContractByHash(ledgers, obj.Keyword, obj.From, obj.Count)
-		contracts, err := qe.DoQuery(dgClient)
-		doQueryResponse(c, &QueryResult{Contracts: contracts.(query.Contracts)}, err, isDebugOn(obj.IsDebug), qe)
-	}
+	qe := query.NewQueryContractByHash(ledgers, strings.TrimSpace(obj.Keyword), obj.From, obj.Count)
+	contracts, err := qe.DoQuery(dgClient)
+	doQueryResponse(c, &QueryResult{Contracts: contracts.(query.Contracts)}, err, isDebugOn(obj.IsDebug), qe)
 }

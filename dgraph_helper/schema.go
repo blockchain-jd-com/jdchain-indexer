@@ -39,7 +39,7 @@ func NewSchemaUidIndex(name string) *Schema {
 }
 
 func NewSchemaUidsIndex(name string) *Schema {
-	return newSchema(name, "[uid]", "@count")
+	return newSchema(name, "[uid]", "@count @reverse")
 }
 
 func newSchema(name, schemeType, others string) *Schema {

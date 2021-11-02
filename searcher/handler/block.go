@@ -27,7 +27,7 @@ func HandleQueryBlockCountByHash(c *gin.Context) {
 func HandleQueryBlockByHash(c *gin.Context) {
 	var obj struct {
 		Keyword string `form:"keyword"`
-		From    int64  `form:"from"`
+		From    int64  `form:"fromIndex"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}
@@ -45,7 +45,7 @@ func HandleQueryBlockByHash(c *gin.Context) {
 
 func HandleQueryBlockRange(c *gin.Context) {
 	var obj struct {
-		From    int64  `form:"from"`
+		From    int64  `form:"fromIndex"`
 		To      int64  `form:"to"`
 		Ledgers string `form:"ledgers"`
 		IsDebug string `form:"debug"`

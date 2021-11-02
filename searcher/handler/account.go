@@ -11,7 +11,7 @@ func HandleQueryDatasetRange(c *gin.Context) {
 	var obj struct {
 		Ledgers string `form:"ledgers"`
 		IsDebug string `form:"debug"`
-		From    int64  `form:"from"`
+		From    int64  `form:"fromIndex"`
 		Count   int64  `form:"count"`
 	}
 	err := c.BindQuery(&obj)
@@ -28,7 +28,7 @@ func HandleQueryDatasetRange(c *gin.Context) {
 func HandleQueryDataAccountByHash(c *gin.Context) {
 	var obj struct {
 		Keyword string `form:"keyword"`
-		From    int64  `form:"from"`
+		From    int64  `form:"fromIndex"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}

@@ -24,7 +24,7 @@ func TestNewValueIndexWorker(t *testing.T) {
 	ns, err := schema.NewSchemaParser().FirstNodeSchema(schemaInfo.Content)
 	assert.Nil(t, err)
 
-	kvSchemaBuilder := NewKVSchemaBuilder(schemaInfo, ns)
+	kvSchemaBuilder := NewKVSchemaBuilder("fakeuid", schemaInfo, ns)
 	worker := NewValueIndexWorker("1", NewSchemaIndexStatusDefault(schemaInfo, "fakeuid"), ns, kvSchemaBuilder, fakeData)
 	assert.NotNil(t, worker)
 

@@ -11,34 +11,27 @@ import (
 var (
 	qlTxQueryResultName = "query_txs"
 	qlNameTxsByHash     = `
-       query_txs(func: has(ledger-hash_id))
-            @filter(anyofterms(ledger-hash_id, "[[ledgers]]")) @normalize
-       {
-            ledger-block {
-                block-tx @filter(regexp(tx-hash_id, /\S*[[keyword]]\S*/))  (orderasc:tx-block_height, first:[[count]], offset:[[offset]]) {
-                    tx-execution_state:tx-execution_state
-					tx-time:tx-time
-                    tx-hash_id:tx-hash_id
-                    tx-block_height:tx-block_height
-                }
-            }
-       }
+		query_txs(func: has(tx-execution_state), orderasc:tx-block_height, first:[[count]], offset:[[offset]]) 
+			@filter(regexp(tx-hash_id, /\S*[[keyword]]\S*/)) @normalize @cascade {
+			tx-execution_state:tx-execution_state
+			tx-time:tx-time
+			tx-block_height:tx-block_height
+			tx-hash_id:tx-hash_id
+			~block-tx {
+				~ledger-block @filter(anyofterms(ledger-hash_id, "[[ledgers]]"))
+			}		
+		}
     `
 	qlNameTxsRange = `
-       query_txs(func: has(ledger-hash_id))
-            @filter(anyofterms(ledger-hash_id, "[[ledgers]]")) @normalize
-       {
-            ledger-block (first:[[count]], offset:[[offset]]) 
-            {
-                block-tx 
-                {
-                    tx-execution_state:tx-execution_state
-					tx-time:tx-time
-                    tx-hash_id:tx-hash_id
-                    tx-block_height:tx-block_height
-                }
-            }
-       }
+		query_txs(func: has(tx-execution_state), orderasc:tx-block_height, first:[[count]], offset:[[offset]]) @normalize @cascade {
+			tx-execution_state:tx-execution_state
+			tx-time:tx-time
+			tx-block_height:tx-block_height
+			tx-hash_id:tx-hash_id
+			~block-tx {
+				~ledger-block @filter(anyofterms(ledger-hash_id, "[[ledgers]]"))
+			}		
+		}
     `
 
 	qlTxCountQueryResultName = "query_txs_count"

@@ -27,7 +27,7 @@ func HandleQueryTxCountByHash(c *gin.Context) {
 func HandleQueryTxByHash(c *gin.Context) {
 	var obj struct {
 		Keyword string `form:"keyword"`
-		From    int64  `form:"from"`
+		From    int64  `form:"fromIndex"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}
@@ -63,7 +63,7 @@ func HandleQueryTxCountByEndpoint(c *gin.Context) {
 func HandleQueryTxByEndpointUser(c *gin.Context) {
 	var obj struct {
 		Keyword string `form:"keyword"`
-		From    int64  `form:"from"`
+		From    int64  `form:"fromIndex"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}
@@ -82,7 +82,7 @@ func HandleQueryTxByEndpointUser(c *gin.Context) {
 func HandleQueryTxRange(c *gin.Context) {
 	var obj struct {
 		Height  int64  `form:"height"`
-		From    int64  `form:"from"`
+		From    int64  `form:"fromIndex"`
 		Count   int64  `form:"count"`
 		Ledgers string `form:"ledgers"`
 		IsDebug string `form:"debug"`
