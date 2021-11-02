@@ -9,8 +9,8 @@ import (
 
 func HandleQueryUserRange(c *gin.Context) {
 	var obj struct {
-		Ledgers string `form:"ledgers"`
-		From    int64  `form:"fromIndex"`
+		Ledger  string `form:"ledger"`
+		From    int64  `form:"from"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}
@@ -19,8 +19,9 @@ func HandleQueryUserRange(c *gin.Context) {
 		c.JSON(http.StatusOK, response.NewFailedResponse(paraError))
 		return
 	}
+	obj.Ledger = c.Param("ledger")
 
-	qe := query.NewQueryUsersRange(parseLedgers(obj.Ledgers), obj.From, obj.Count)
+	qe := query.NewQueryUsersRange(parseLedgers(obj.Ledger), obj.From, obj.Count)
 	users, err := qe.DoQuery(dgClient)
 	doQueryResponse(c, &QueryResult{Users: users.(query.Users)}, err, isDebugOn(obj.IsDebug), qe)
 }
@@ -28,7 +29,7 @@ func HandleQueryUserRange(c *gin.Context) {
 func HandleQueryUserByHash(c *gin.Context) {
 	var obj struct {
 		Keyword string `form:"keyword"`
-		From    int64  `form:"fromIndex"`
+		From    int64  `form:"from"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}

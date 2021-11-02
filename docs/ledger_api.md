@@ -1,5 +1,8 @@
 ## 区块链基础数据检索API
 
+[全局搜索](#全局搜索)， [合约搜索](#合约搜索)，[合约数量](#合约数量)，[区块搜索](#区块搜索)，[区块数量](#区块数量)，[交易搜索](#交易搜索)，[交易数量](#交易数量)，[终端账户-交易搜索](#终端账户-交易搜索)，[终端账户-交易数量](#终端账户-交易数量)，[用户账户搜索](#用户账户搜索)，[用户账户数量](#用户账户数量)，[数据账户搜索](#数据账户搜索)，[数据账户数量](#数据账户数量)，[事件账户搜索](#事件账户搜索)，[事件账户数量](#事件账户数量)，[账本列表](#账本列表)，[区块分页列表](#区块分页列表)，[交易分页列表](#交易分页列表)，[用户账户分页列表](#用户账户分页列表)，[合约分页列表](#合约分页列表)，[数据账户分页列表](#数据账户分页列表)，[事件账户分页列表](#事件账户分页列表)，[按时间查询交易](#按时间查询交易)
+
+
 ### 全局搜索
 
 | Method | Url |
@@ -483,226 +486,60 @@ $ curl 'http://localhost:10001/ledgers/j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuY
 }
 ```
 
-### 账本列表
+### 按时间查询交易数
 
 | Method | Url |
 | ------ | ------ |
-|GET |  /api/v1/query/ledgers |
+|GET |  /ledgers/:ledger/txs/count/from/:from/to:to |
+
+参数列表：
+| 名称 | 位置 | 类型 | 类型 |
+| ------ | ------ | ------ |
+| ledger   | form |string |账本哈希 |
+| from  | form |int | 起始时间戳（毫秒），包含 |
+| to     | form |int    | 结束时间戳（毫秒），不包含 |
 
 测试用例：
 ```bash
-$ curl 'http://localhost:10001/api/v1/query/ledgers' | json_pp
+$ curl 'http://localhost:10001/ledgers/j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC/txs/count/from/1635767065385/to/1635767065428' | json_pp
 {
    "success" : true,
-   "data" : [
-      {
-         "height" : 9, // 最新高度
-         "hash" : "j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC"
-      }
-   ]
+   "data" : 2
 }
 ```
 
-### 区块分页列表
+### 按时间查询交易
 
 | Method | Url |
 | ------ | ------ |
-|GET |  /api/v1/query/blocks/range |
+|GET |  /ledgers/:ledger/txs/from/:from/to:to |
 
 参数列表：
-| 名称 | 位置 | 类型 |
-| ------ | ------ |
-| ledgers   | form |string |
-| from  | form |int |
-| to     | form |int    |
+| 名称 | 位置 | 类型 | 类型 |
+| ------ | ------ | ------ |
+| ledger   | path |string |账本哈希 |
+| from  | path |int | 起始时间戳（毫秒），包含 |
+| to     | path |int    | 结束时间戳（毫秒），不包含 |
+| count     | form |int    | 最大返回条数，最大1000 |
 
 测试用例：
 ```bash
-$ curl 'http://localhost:10001/api/v1/query/blocks/range?ledgers=j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC&from=0&to=2' | json_pp
+$ curl 'http://localhost:10001/ledgers/j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC/txs/from/1635767065385/to/1635767065428?count=2' | json_pp
 {
-   "success" : true,
    "data" : [
       {
-         "hash" : "j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC",
-         "height" : 0
+         "execution_state" : "SUCCESS",
+         "hash" : "j5kgnLXs9eaYghKJTgQnJRuQVg8bqjVJU8J2tgn4VN13Ha",
+         "block_height" : 190,
+         "time" : 1635767065385
       },
       {
-         "hash" : "j5r1A2cwNHEgCqLL87jFbjaNUHv2hVtfDaynArUvJBGGyL",
-         "height" : 1
-      },
-      {
-         "hash" : "j5i9BJY3WsaETaqGZsFDayNkLzCmCwVX5QHsPkpfSMV57G",
-         "height" : 2
-      }
-   ]
-}
-```
-
-### 交易分页列表
-
-| Method | Url |
-| ------ | ------ |
-|GET |  /api/v1/query/txs/range   |
-
-参数列表：
-| 名称 | 位置 | 类型 |
-| ------ | ------ |
-| ledgers   | form |string |
-| height   | form |int |
-| from  | form |int |
-| to     | form |int    |
-
-测试用例：
-```bash
-$ curl 'http://localhost:10001/api/v1/query/txs/range?ledgers=j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC&height=0&from=0&count=2' | json_pp
-{
-   "success" : true,
-   "data" : [
-      {
-         "hash" : "j5sX9HuA2wsKJV3qCWCpmEnAvPMjJo5c5q3J8EgK1sASZn",
-         "block_height" : 0,
-         "execution_state" : "SUCCESS"
-      }
-   ]
-}
-```
-
-### 用户账户分页列表
-
-| Method | Url |
-| ------ | ------ |
-|GET |  /api/v1/query/users/range |
-
-参数列表：
-| 名称 | 位置 | 类型 |
-| ------ | ------ |
-| ledgers   | form |string |
-| from  | form |int |
-| to     | form |int    |
-
-测试用例：
-```bash
-$ curl 'http://localhost:10001/api/v1/query/users/range?ledgers=j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC&from=0&count=2' | json_pp
-{
-   "success" : true,
-   "data" : [
-      {
-         "address" : {
-            "value" : "LdeP2yzn1dwG7Y81TGiStGp89YftmgaErrz9o"
-         },
-         "pubKey" : {
-            "value" : "7VeRL5vD8fhSLvn2g89GHjRzRRb5CswCvBYoPfb6E2tndgWA"
-         }
-      },
-      {
-         "pubKey" : {
-            "value" : "7VeR8396dihD4eLf5hb63eerSSVJwHhHcLTKDaKjboVRyzNT"
-         },
-         "address" : {
-            "value" : "LdeNi6zA1fbXEX85TZxpP6DN9tfyW44S8sifn"
-         }
-      }
-   ]
-}
-```
-
-### 合约分页列表
-
-| Method | Url |
-| ------ | ------ |
-|GET |  /api/v1/query/contracts/range |
-
-参数列表：
-| 名称 | 位置 | 类型 |
-| ------ | ------ |
-| ledgers   | form |string |
-| from  | form |int |
-| to     | form |int    |
-
-测试用例：
-```bash
-$ curl 'http://localhost:10001/api/v1/query/contracts/range?ledgers=j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC&from=0&count=2' | json_pp
-{
-   "data" : [
-      {
-         "address" : {
-            "value" : "LdeNyTUurinxBWqpvkEhmuYEgVNFxH48dJLP7"
-         },
-         "pubKey" : {
-            "value" : "7VeRGHN8yC5EUNTsQvJQPBUdiHZgDUWUgnNLr2UBQJjSkNLL"
-         }
+         "block_height" : 191,
+         "execution_state" : "SUCCESS",
+         "hash" : "j5vYf3PTy9w459c56TFcXJ1P2s2fuRSn6QJ2cBtfXHDGH8",
+         "time" : 1635767065400
       }
    ],
    "success" : true
-}
-```
-
-### 数据账户分页列表
-
-| Method | Url |
-| ------ | ------ |
-|GET |  /api/v1/query/accounts/range |
-
-参数列表：
-| 名称 | 位置 | 类型 |
-| ------ | ------ |
-| ledgers   | form |string |
-| from  | form |int |
-| to     | form |int    |
-
-测试用例：
-```bash
-$ curl 'http://localhost:10001/api/v1/query/accounts/range?ledgers=j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC&from=0&count=2' | json_pp
-{
-   "success" : true,
-   "data" : [
-      {
-         "pubKey" : {
-            "value" : "7VeRFGB8ysFtshcwv2sqarHnJwNvP3ienxfW1FAiNhfRBHUp"
-         },
-         "address" : {
-            "value" : "LdeNwqJPPKjUiaKQJWcXxqLEtE7wkXFbN7oXa"
-         }
-      },
-      {
-         "address" : {
-            "value" : "LdeNgiG1N74XkPXb6VKsN7LkkrJcsaHaQ76iB"
-         },
-         "pubKey" : {
-            "value" : "7VeRJTi3sfomUFfYYJzSUPhmDYnnnLhfG97Z5X632fU1p7jQ"
-         }
-      }
-   ]
-}
-```
-
-### 事件账户分页列表
-
-| Method | Url |
-| ------ | ------ |
-|GET |  /api/v1/query/eventAccounts/range |
-
-参数列表：
-| 名称 | 位置 | 类型 |
-| ------ | ------ |
-| ledgers   | form |string |
-| from  | form |int |
-| to     | form |int    |
-
-测试用例：
-```bash
-$ curl 'http://localhost:10001/api/v1/query/eventAccounts/range?ledgers=j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuYBpgDC&from=0&count=2' | json_pp
-{
-   "success" : true,
-   "data" : [
-      {
-         "pubKey" : {
-            "value" : "7VeRFjbocQzGubf7uQgBDXZCXW8W4QsAgS51ShsXFjVXV9CK"
-         },
-         "address" : {
-            "value" : "LdeNujhAnx8hxca4venxoonh6Bchjiz8tfCAX"
-         }
-      }
-   ]
 }
 ```

@@ -14,9 +14,9 @@ import (
 
 func HandleQueryEventAccountsRange(c *gin.Context) {
 	var obj struct {
-		Ledgers string `form:"ledgers"`
+		Ledger  string `form:"ledger"`
 		IsDebug string `form:"debug"`
-		From    int64  `form:"fromIndex"`
+		From    int64  `form:"from"`
 		Count   int64  `form:"count"`
 	}
 	err := c.BindQuery(&obj)
@@ -24,8 +24,9 @@ func HandleQueryEventAccountsRange(c *gin.Context) {
 		c.JSON(http.StatusOK, response.NewFailedResponse(paraError))
 		return
 	}
+	obj.Ledger = c.Param("ledger")
 
-	qe := query.NewEventAccountRangeQuery(parseLedgers(obj.Ledgers), obj.From, obj.Count)
+	qe := query.NewEventAccountRangeQuery(parseLedgers(obj.Ledger), obj.From, obj.Count)
 	accounts, err := qe.DoQuery(dgClient)
 	doQueryResponse(c, accounts, err, isDebugOn(obj.IsDebug), qe)
 }
@@ -33,7 +34,7 @@ func HandleQueryEventAccountsRange(c *gin.Context) {
 func HandleQueryEventAccountByHash(c *gin.Context) {
 	var obj struct {
 		Keyword string `form:"keyword"`
-		From    int64  `form:"fromIndex"`
+		From    int64  `form:"from"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}

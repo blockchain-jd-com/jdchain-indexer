@@ -51,6 +51,34 @@ var (
 	   }
     `
 
+	qlNameTxsCountByTime = `
+       var(func: has(ledger-hash_id))
+            @filter(anyofterms(ledger-hash_id, "[[ledgers]]")) @normalize
+       {
+            ledger-block {
+                block-tx @filter(ge(tx-time, [[from]]) and lt(tx-time, [[to]])){
+                    counts as count(tx-hash_id)
+                }
+            }
+       }
+       
+       query_txs_count() {
+            tx-count: sum(val(counts))
+	   }
+    `
+	qlNameTxsByTime = `
+		query_txs(func: has(tx-execution_state), orderasc:tx-block_height, first:[[count]]) 
+			@filter(ge(tx-time, [[from]]) and lt(tx-time, [[to]])) @normalize @cascade {
+			tx-execution_state:tx-execution_state
+			tx-time:tx-time
+			tx-block_height:tx-block_height
+			tx-hash_id:tx-hash_id
+			~block-tx {
+				~ledger-block @filter(anyofterms(ledger-hash_id, "[[ledgers]]"))
+			}		
+		}
+    `
+
 	qlTxInBlockQueryResultName = "query_txs_in_block"
 	qlNameTxsInBlock           = `
        query_txs_in_block(func: has(ledger-hash_id))
@@ -110,6 +138,31 @@ func NewQueryTxCountByKeyword(ledgers []string, keyword string) *QueryTxCount {
 		lang: query,
 		args: map[string]interface{}{
 			"keyword": keyword,
+			"ledgers": strings.Join(ledgers, " "),
+		},
+	}
+}
+
+func NewQueryTxCountByTime(ledgers []string, from int64, to int64) *QueryTxCount {
+	query := newQueryLang(qlNameTxsCountByTime, qlTxCountQueryResultName)
+	return &QueryTxCount{
+		lang: query,
+		args: map[string]interface{}{
+			"from":    strconv.FormatInt(from, 10),
+			"to":      strconv.FormatInt(to, 10),
+			"ledgers": strings.Join(ledgers, " "),
+		},
+	}
+}
+
+func NewQueryTxByTime(ledgers []string, from int64, to int64, count int64) *QueryTx {
+	query := newQueryLang(qlNameTxsByTime, qlTxQueryResultName)
+	return &QueryTx{
+		lang: query,
+		args: map[string]interface{}{
+			"from":    strconv.FormatInt(from, 10),
+			"to":      strconv.FormatInt(to, 10),
+			"count":   strconv.FormatInt(count, 10),
 			"ledgers": strings.Join(ledgers, " "),
 		},
 	}

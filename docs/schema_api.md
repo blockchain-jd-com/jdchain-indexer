@@ -1,5 +1,7 @@
 ## 区块链基础数据检索API
 
+[添加索引](#添加索引)，[索引列表](#索引列表)，[启动索引](#启动索引)，[停止索引](#停止索引)，[删除索引](#删除索引)，[SQL方式查询](#SQL方式查询)，[Dgraph语句查询](#Dgraph语句查询)
+
 ### 添加索引
 
 | Method | Url |
@@ -107,7 +109,7 @@ $ curl -X DELETE http://localhost:8082/schema/teacher-j5ufkR-LdeNwq
 ```
 > 删除前必须先停掉索引
 
-### Sql方式查询
+### SQL方式查询
 
 | Method | Url |
 | ------ | ------ |

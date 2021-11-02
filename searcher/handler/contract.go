@@ -10,8 +10,8 @@ import (
 
 func HandleQueryContractRange(c *gin.Context) {
 	var obj struct {
-		Ledgers string `form:"ledgers"`
-		From    int64  `form:"fromIndex"`
+		Ledger  string `form:"ledger"`
+		From    int64  `form:"from"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}
@@ -20,8 +20,9 @@ func HandleQueryContractRange(c *gin.Context) {
 		c.JSON(http.StatusOK, response.NewFailedResponse(paraError))
 		return
 	}
+	obj.Ledger = c.Param("ledger")
 
-	qe := query.NewQueryContractRange(parseLedgers(obj.Ledgers), obj.From, obj.Count)
+	qe := query.NewQueryContractRange(parseLedgers(obj.Ledger), obj.From, obj.Count)
 	contracts, err := qe.DoQuery(dgClient)
 	doQueryResponse(c, &QueryResult{Contracts: contracts.(query.Contracts)}, err, isDebugOn(obj.IsDebug), qe)
 
@@ -48,7 +49,7 @@ func HandleQueryContractCountByHash(c *gin.Context) {
 func HandleQueryContractByHash(c *gin.Context) {
 	var obj struct {
 		Keyword string `form:"keyword"`
-		From    int64  `form:"fromIndex"`
+		From    int64  `form:"from"`
 		Count   int64  `form:"count"`
 		IsDebug string `form:"debug"`
 	}

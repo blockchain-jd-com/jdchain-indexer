@@ -78,19 +78,17 @@ func startServer(dgraphHost string, listeningPort, cacheSize int) {
 	r.GET("/ledgers/:ledger/txs/search", handler.HandleQueryTxByHash)
 	r.GET("/ledgers/:ledger/txs/count/search", handler.HandleQueryTxCountByHash)
 
+	r.GET("/ledgers/:ledger/users/txs/search", handler.HandleQueryTxByEndpointUser)
+	r.GET("/ledgers/:ledger/users/txs/count/search", handler.HandleQueryTxCountByEndpoint)
+
 	r.GET("/ledgers/:ledger/users/search", handler.HandleQueryUserByHash)
 	r.GET("/ledgers/:ledger/users/count/search", handler.HandleQueryUserCountByHash)
 
 	r.GET("/ledgers/:ledger/accounts/search", handler.HandleQueryDataAccountByHash)
 	r.GET("/ledgers/:ledger/accounts/count/search", handler.HandleQueryDataAccountCountByHash)
 
-	v1QueryGroup := r.Group("api/v1/query")
-	v1QueryGroup.GET("ledger/range", handler.HandleQueryLedgerRange)
-	v1QueryGroup.GET("block/range", handler.HandleQueryBlockRange)
-	v1QueryGroup.GET("tx/range", handler.HandleQueryTxRange)
-	v1QueryGroup.GET("user/range", handler.HandleQueryUserRange)
-	v1QueryGroup.GET("contract/range", handler.HandleQueryContractRange)
-	v1QueryGroup.GET("account/range", handler.HandleQueryDatasetRange)
+	r.GET("/ledgers/:ledger/eventAccounts/search", handler.HandleQueryEventAccountByHash)
+	r.GET("/ledgers/:ledger/eventAccounts/count/search", handler.HandleQueryEventAccountCountByHash)
 
 	if err := r.Run(fmt.Sprintf("0.0.0.0:%d", listeningPort)); err != nil {
 		fmt.Println(err)

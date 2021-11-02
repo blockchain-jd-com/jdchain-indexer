@@ -74,6 +74,10 @@ func StartApiServer(dgraphHost string, listeningHost string, listeningPort int, 
 	r.GET("/ledgers/:ledger/txs/search", handler.HandleQueryTxByHash)
 	r.GET("/ledgers/:ledger/txs/count/search", handler.HandleQueryTxCountByHash)
 
+	// 按时间查询
+	r.GET("/ledgers/:ledger/txs/count/from/:from/to/:to", handler.HandleQueryTxCountByTime)
+	r.GET("/ledgers/:ledger/txs/from/:from/to/:to", handler.HandleQueryTxByTime)
+
 	r.GET("/ledgers/:ledger/users/txs/search", handler.HandleQueryTxByEndpointUser)
 	r.GET("/ledgers/:ledger/users/txs/count/search", handler.HandleQueryTxCountByEndpoint)
 
@@ -85,15 +89,6 @@ func StartApiServer(dgraphHost string, listeningHost string, listeningPort int, 
 
 	r.GET("/ledgers/:ledger/eventAccounts/search", handler.HandleQueryEventAccountByHash)
 	r.GET("/ledgers/:ledger/eventAccounts/count/search", handler.HandleQueryEventAccountCountByHash)
-
-	v1QueryGroup := r.Group("api/v1/query")
-	v1QueryGroup.GET("ledgers", handler.HandleQueryLedgerRange)
-	v1QueryGroup.GET("blocks/range", handler.HandleQueryBlockRange)
-	v1QueryGroup.GET("txs/range", handler.HandleQueryTxRange)
-	v1QueryGroup.GET("users/range", handler.HandleQueryUserRange)
-	v1QueryGroup.GET("contracts/range", handler.HandleQueryContractRange)
-	v1QueryGroup.GET("accounts/range", handler.HandleQueryDatasetRange)
-	v1QueryGroup.GET("eventAccounts/range", handler.HandleQueryEventAccountsRange)
 
 	err := r.Run(fmt.Sprintf("%s:%d", listeningHost, listeningPort))
 	if err != nil {
