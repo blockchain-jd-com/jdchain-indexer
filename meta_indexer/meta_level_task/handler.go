@@ -60,7 +60,7 @@ func (handler *LevelTaskHandler) Setup() *LevelTaskHandler {
 }
 
 func (handler *LevelTaskHandler) run() {
-	ticker := time.NewTicker(5 * time.Second)
+	ticker := time.NewTicker(3 * time.Second)
 	for {
 		select {
 		case lt := <-handler.chNewTask:

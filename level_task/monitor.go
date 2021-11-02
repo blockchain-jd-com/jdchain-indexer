@@ -32,7 +32,7 @@ func (monitor *LevelTaskMonitor) Setup() *LevelTaskMonitor {
 }
 
 func (monitor *LevelTaskMonitor) run() {
-	ticker := time.NewTicker(20 * time.Second)
+	ticker := time.NewTicker(3 * time.Second)
 	for {
 		select {
 		case <-ticker.C:
