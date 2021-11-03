@@ -2,9 +2,19 @@
 
 穿透式检索`Argus`提供`JD Chain`区块链基础数据索引，自定义键值索引服务。
 
+版本对应关系：
+|  jdchain-indexer   | JD Chain  |
+|  ----  | ----  |
+| 0.9.0  | 1.6.0 |
+
 ## 安装并启动 Dgraph
 
 参照[`Dgraph`官方文档](https://dgraph.io/downloads)下载安装并启动`Dgraph`（要求版本>1.1.0）.
+
+`docker`启动示例：
+```bash
+docker run -d --rm -it -p 8181:8080 -p 9080:9080 -p 8000:8000 dgraph/standalone:v20.03.0
+```
 
 ## 数据检索系统的使用（Argus）
 
@@ -35,8 +45,8 @@ argus --ledger-host 127.0.0.1:8080 --dgraph 127.0.0.1:9080 --production true
 - `production` 是否生产模式，默认`false`
 - `ledger-host` 区块链网关服务地址，例如：`http://127.0.0.1:8080`
 - `api-host` 区块链基础数据检索服务绑定`host`，默认`0.0.0.0`
-- `api-port` 区块链基础数据检索服务绑定端口，默认`10001`
-- `schema-port` `Schema`服务端口，默认`8082`
+- `api-port` 区块链基础数据检索服务绑定端口，默认`10001`，对应网关`data.retrieval.url`配置项
+- `schema-port` `Schema`服务端口，默认`8082`，对应网关`schema.retrieval.url`配置项
 
 > 其中`api-host`/`argus api-port`与`argus api-server`命令中`host`/`port`同义
 > 其中`schema-port`与`argus data`命令中`port`同义
@@ -73,6 +83,8 @@ argus api-server --host 127.0.0.1 --port 10001 --dgraph 127.0.0.1:9080 --product
 - `dgraph` `Dgraph`服务地址
 - `production`生产模式
 
+> 对应网关`data.retrieval.url`配置项
+
 提供的接口及参数请参照[账本基础数据检索API](docs/ledger_api.md)
 
 ### 启动Value索引服务
@@ -89,6 +101,8 @@ argus data --port 8082 --ledger-host http://127.0.0.1:8080 --dgraph 127.0.0.1:90
 - `ledger-host` `JD Chain`网关服务地址
 - `dgraph` `Dgraph`服务地址
 - `production`生产模式
+
+> 对应网关`schema.retrieval.url`配置项
 
 提供的接口及参数请参照[Schema API](docs/schema_api.md)
 
