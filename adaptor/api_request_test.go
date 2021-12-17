@@ -1,8 +1,10 @@
 package adaptor
 
 import (
-	"github.com/stretchr/testify/assert"
+	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -64,7 +66,7 @@ func TestGetAccountCount(t *testing.T) {
 }
 
 func TestGetContractCount(t *testing.T) {
-	c, err := getTotalContractCountInLedgerFromServer(apiHostInTest, ledgerDefault.Hash)
+	c, err := GetTotalContractCountInLedgerFromServer(apiHostInTest, ledgerDefault.Hash)
 	assert.Nil(t, err)
 	assert.True(t, c > 0)
 	ledgerDefault.userCount = c
@@ -77,3 +79,46 @@ func TestGetContractCount(t *testing.T) {
 //	assert.Nil(t, err)
 //	assert.True(t, len(participants) > 3)
 //}
+
+func TestGetContractDetailFromServer(t *testing.T) {
+	type args struct {
+		apiHost  string
+		ledgerId string
+		address  string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    interface{}
+		wantErr bool
+	}{
+		{
+			name: "a",
+			args: args{
+				apiHost:  "http://127.0.0.1:8080",
+				ledgerId: "j5nfkEvfyHidqk9MHJZGFZxVbLBfy23M4TQwcqP6fFewkF",
+				address:  "LdeP3PLhibZtysYoKatKcB2e7sBPLuPdt6Qf1",
+			},
+		},
+		{
+			name: "b",
+			args: args{
+				apiHost:  "http://127.0.0.1:8080",
+				ledgerId: "j5nfkEvfyHidqk9MHJZGFZxVbLBfy23M4TQwcqP6fFewkF",
+				address:  "LdeNwL68rWmH6Q6GArfgH6CCxh4MBB5wQFkfk",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetContractDetailFromServer(tt.args.apiHost, tt.args.ledgerId, tt.args.address)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetContractDetailFromServer() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetContractDetailFromServer() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

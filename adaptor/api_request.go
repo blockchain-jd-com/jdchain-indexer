@@ -2,12 +2,13 @@ package adaptor
 
 import (
 	"fmt"
-	"github.com/imkira/go-interpol"
-	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/imkira/go-interpol"
+	"github.com/tidwall/gjson"
 )
 
 var (
@@ -50,9 +51,11 @@ func GetTxListInBlockRawFromServer(apiHost, ledgerID string, height, from, count
 	return
 }
 
-func GetAccountsFromServer(apiHost, ledgerID string) ([]DataAccountOperation, error) {
+func GetAccountsFromServer(apiHost, ledgerID string, from, count int64) ([]DataAccountOperation, error) {
 	paras := map[string]string{
 		"ledger": ledgerID,
+		"from":   strconv.FormatInt(from, 10),
+		"count":  strconv.FormatInt(count, 10),
 	}
 	url := buildUrl(apiHost, apiGetAccountList, paras)
 	raw, err := fetchRequestRawResult(url)
@@ -75,11 +78,13 @@ func GetAccountsFromServer(apiHost, ledgerID string) ([]DataAccountOperation, er
 	return accounts, nil
 }
 
-func GetContractsFromServer(apiHost, ledgerID string) ([]ContractDeployOperation, error) {
+func GetContractsFromServer(apiHost, ledgerID string, from, count int64) ([]ContractDeployOperation, error) {
 	paras := map[string]string{
 		"ledger": ledgerID,
+		"from":   strconv.FormatInt(from, 10),
+		"count":  strconv.FormatInt(count, 10),
 	}
-	url := buildUrl(apiHost, apiGetContractList, paras)
+	url := buildUrl(apiHost, apiGetContractAccountList, paras)
 	raw, err := fetchRequestRawResult(url)
 	if err != nil {
 		return nil, err
@@ -100,9 +105,30 @@ func GetContractsFromServer(apiHost, ledgerID string) ([]ContractDeployOperation
 	return contracts, nil
 }
 
-func GetUsersFromServer(apiHost, ledgerID string) ([]UserOperation, error) {
+func GetContractDetailFromServer(apiHost, ledgerId, address string) (interface{}, error) {
+	paras := map[string]string{
+		"ledger":  ledgerId,
+		"address": address,
+	}
+
+	url := buildUrl(apiHost, apiGetContractDetail, paras)
+	raw, err := fetchRequestRawResult(url)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := parseToJson(raw, url)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func GetUsersFromServer(apiHost, ledgerID string, from, count int64) ([]UserOperation, error) {
 	paras := map[string]string{
 		"ledger": ledgerID,
+		"from":   strconv.FormatInt(from, 10),
+		"count":  strconv.FormatInt(count, 10),
 	}
 	url := buildUrl(apiHost, apiGetUserList, paras)
 	raw, err := fetchRequestRawResult(url)
@@ -123,6 +149,113 @@ func GetUsersFromServer(apiHost, ledgerID string) ([]UserOperation, error) {
 	}
 
 	return users, nil
+}
+
+func GetUserInfoFromServer(apiHost, ledgerID, address string) (result gjson.Result, e error) {
+	paras := map[string]string{
+		"ledger":  ledgerID,
+		"address": address,
+	}
+	url := buildUrl(apiHost, apiGetUserDetail, paras)
+	return requestFromServer(url, paras)
+}
+
+func GetUserAuthorizationFromServer(apiHost, ledgerID, address string) (result gjson.Result, e error) {
+	paras := map[string]string{
+		"ledger":  ledgerID,
+		"address": address,
+	}
+	url := buildUrl(apiHost, apiGetUserAuthorization, paras)
+	return requestFromServer(url, paras)
+}
+
+func GetEventAccountListFromServer(apiHost, ledgerID string, from, count int64) (result []gjson.Result, e error) {
+	paras := map[string]string{
+		"ledger": ledgerID,
+		"from":   strconv.FormatInt(from, 10),
+		"count":  strconv.FormatInt(count, 10),
+	}
+	url := buildUrl(apiHost, apiGetEventAccountList, paras)
+	r, err := requestFromServer(url, paras)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.Array(), nil
+}
+
+func GetEventAccountInfoFromServer(apiHost, ledgerID, address string) (result gjson.Result, e error) {
+	paras := map[string]string{
+		"ledger":  ledgerID,
+		"address": address,
+	}
+	url := buildUrl(apiHost, apiGetEventAccountInfo, paras)
+	return requestFromServer(url, paras)
+}
+
+func GetEventAccountEventNameListFromServer(apiHost, ledgerID, address string, from, count int64) (result []gjson.Result, e error) {
+	paras := map[string]string{
+		"ledger":  ledgerID,
+		"address": address,
+		"from":    strconv.FormatInt(from, 10),
+		"count":   strconv.FormatInt(count, 10),
+	}
+	url := buildUrl(apiHost, apiGetEventAccountEventNameList, paras)
+	r, err := requestFromServer(url, paras)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.Array(), nil
+}
+
+func GetEventAccountEventNameInfoFromServer(apiHost, ledgerID, address, eventName string) (result []gjson.Result, e error) {
+	paras := map[string]string{
+		"ledger":    ledgerID,
+		"address":   address,
+		"eventName": eventName,
+	}
+	url := buildUrl(apiHost, apiGetEventAccountEventNameInfo, paras)
+	r, err := requestFromServer(url, paras)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.Array(), nil
+}
+
+func GetAccountEntriesListFromServer(apiHost, ledgerID, address string, from, count int64) (result []gjson.Result, e error) {
+	paras := map[string]string{
+		"ledger":  ledgerID,
+		"address": address,
+		"from":    strconv.FormatInt(from, 10),
+		"count":   strconv.FormatInt(count, 10),
+	}
+	url := buildUrl(apiHost, apiGetAccountEntriesList, paras)
+	r, err := requestFromServer(url, paras)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.Array(), nil
+}
+
+func GetAccountInfoFromServer(apiHost, ledgerID, address string) (result gjson.Result, e error) {
+	paras := map[string]string{
+		"ledger":  ledgerID,
+		"address": address,
+	}
+	url := buildUrl(apiHost, apiGetAccountInfo, paras)
+	return requestFromServer(url, paras)
+}
+
+func requestFromServer(url string, para map[string]string) (result gjson.Result, e error) {
+	raw, err := fetchRequestRawResult(url)
+	if err != nil {
+		return gjson.Result{}, err
+	}
+
+	return parseToJson(raw, url)
 }
 
 func GetTxListInBlockFromServer(apiHost, ledgerID string, height, from, count int64) ([]*Transaction, error) {
@@ -264,7 +397,7 @@ func parseOperations(txHash string, operations []gjson.Result) []interface{} {
 	return contents
 }
 
-func getTotalContractCountInLedgerFromServer(apiHost, ledgerID string) (int64, error) {
+func GetTotalContractCountInLedgerFromServer(apiHost, ledgerID string) (int64, error) {
 	paras := map[string]string{
 		"ledger": ledgerID,
 	}
@@ -281,7 +414,7 @@ func getTotalContractCountInLedgerFromServer(apiHost, ledgerID string) (int64, e
 	return count, nil
 }
 
-func getTotalAccountCountInLedgerFromServer(apiHost, ledgerID string) (int64, error) {
+func GetTotalAccountCountInLedgerFromServer(apiHost, ledgerID string) (int64, error) {
 	paras := map[string]string{
 		"ledger": ledgerID,
 	}
@@ -298,7 +431,7 @@ func getTotalAccountCountInLedgerFromServer(apiHost, ledgerID string) (int64, er
 	return count, nil
 }
 
-func getTotalUserCountInLedgerFromServer(apiHost, ledgerID string) (int64, error) {
+func GetTotalUserCountInLedgerFromServer(apiHost, ledgerID string) (int64, error) {
 	//result, _, err := doRequest(apiHost, apiGetUserTotalCount, map[string]string{
 	//    "ledger": ledgerID,
 	//})
@@ -318,18 +451,78 @@ func getTotalUserCountInLedgerFromServer(apiHost, ledgerID string) (int64, error
 	return count, nil
 }
 
-//
-//func getTxCountInBlockFromServer(apiHost, ledgerID string, Height int64) (int64, error) {
-//    result, _, err := doRequest(apiHost, apiGetTxCountOfBlock, map[string]string{
-//        "ledger": ledgerID,
-//        "Height": strconv.FormatInt(Height, 10),
-//    })
-//    if err != nil {
-//        return -1, err
-//    }
-//    count := result.Int()
-//    return count, nil
-//}
+func GetTotalEventAccountCountInLedgerFromServer(apiHost, ledgerID string) (int64, error) {
+	paras := map[string]string{
+		"ledger": ledgerID,
+	}
+	url := buildUrl(apiHost, apiGetTotalEventAccountCount, paras)
+	raw, err := fetchRequestRawResult(url)
+	if err != nil {
+		return -1, err
+	}
+	result, err := parseToJson(raw, url)
+	if err != nil {
+		return -1, err
+	}
+	count := result.Int()
+	return count, nil
+}
+
+func GetTotalAccountEntriesCountFromServer(apiHost, ledgerID, address string) (int64, error) {
+	paras := map[string]string{
+		"ledger":  ledgerID,
+		"address": address,
+	}
+	url := buildUrl(apiHost, apiGetAccountEntriesCount, paras)
+	raw, err := fetchRequestRawResult(url)
+	if err != nil {
+		return -1, err
+	}
+	result, err := parseToJson(raw, url)
+	if err != nil {
+		return -1, err
+	}
+	count := result.Int()
+	return count, nil
+}
+
+func GetTotalEventNameCountInLedgerFromServer(apiHost, ledgerID, address string) (int64, error) {
+	paras := map[string]string{
+		"ledger":  ledgerID,
+		"address": address,
+	}
+	url := buildUrl(apiHost, apiGetEventAccountEventNameCount, paras)
+	raw, err := fetchRequestRawResult(url)
+	if err != nil {
+		return -1, err
+	}
+	result, err := parseToJson(raw, url)
+	if err != nil {
+		return -1, err
+	}
+	count := result.Int()
+	return count, nil
+}
+
+func GetTxCountInBlockFromServer(apiHost, ledgerID string, height int64) (int64, error) {
+
+	paras := map[string]string{
+		"ledger": ledgerID,
+		"height": strconv.FormatInt(height, 10),
+	}
+
+	url := buildUrl(apiHost, apiGetTxCountOfBlock, paras)
+	raw, err := fetchRequestRawResult(url)
+	if err != nil {
+		return -1, err
+	}
+	result, err := parseToJson(raw, url)
+	if err != nil {
+		return -1, err
+	}
+	count := result.Int()
+	return count, nil
+}
 
 func GetBlockFromServer(apiHost, ledgerID string, height int64) (b *Block, e error) {
 	paras := map[string]string{
@@ -364,6 +557,9 @@ func GetBlockFromServer(apiHost, ledgerID string, height int64) (b *Block, e err
 	block.TransactionSetHash = result.Get("transactionSetHash").String()
 	block.UserAccountSetHash = result.Get("userAccountSetHash").String()
 	block.AdminAccountHash = result.Get("adminAccountHash").String()
+	block.ContractAccountSetHash = result.Get("contractAccountSetHash").String()
+	block.DataAccountSetHash = result.Get("dataAccountSetHash").String()
+	block.UserEventSetHash = result.Get("userEventSetHash").String()
 
 	if block.LedgerID != ledgerID || block.Height != height {
 		e = fmt.Errorf("request for block  is not equal with response [%d -> %d] [%s -> %s]",

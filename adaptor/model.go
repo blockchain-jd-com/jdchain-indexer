@@ -2,8 +2,9 @@ package adaptor
 
 import (
 	"fmt"
-	"git.jd.com/jd-blockchain/explorer/dgraph_helper"
 	"strconv"
+
+	"git.jd.com/jd-blockchain/explorer/dgraph_helper"
 )
 
 const Success = "SUCCESS"
@@ -52,16 +53,19 @@ func (ledger *Ledger) QueryBy() (string, string) {
 }
 
 type Block struct {
-	Hash               string
-	Height             int64
-	Time               int64
-	LedgerID           string
-	PreviousHash       string
-	TransactionSetHash string
-	UserAccountSetHash string
-	AdminAccountHash   string
-	TxCount            int64
-	txs                []*Transaction
+	Hash                   string
+	Height                 int64
+	Time                   int64
+	LedgerID               string
+	PreviousHash           string
+	TransactionSetHash     string
+	UserAccountSetHash     string
+	AdminAccountHash       string
+	ContractAccountSetHash string
+	DataAccountSetHash     string
+	UserEventSetHash       string
+	TxCount                int64
+	txs                    []*Transaction
 }
 
 func (block *Block) UniqueMutationName() string {

@@ -1,10 +1,11 @@
 package adaptor
 
 import (
+	"testing"
+
 	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
-	"testing"
 )
 
 var (
@@ -290,7 +291,7 @@ func TestParseTransaction(t *testing.T) {
 
 	opWrite, ok := tx.Contents[1].(*KVSetOperation)
 	assert.True(t, ok, spew.Sdump(opWrite))
-	assert.Equal(t, "5SmKyKcUhizt46BABySB8CxXxmixX81HfMP6", opWrite.DataSetAddress)
+	assert.Equal(t, "5SmKyKcUhizt46BABySB8CxXxmixX81HfMP6", opWrite.Histories[0].DataSetAddress)
 	assert.Len(t, opWrite.Histories, 1)
 	historyHead := opWrite.Histories[0]
 	assert.Equal(t, "param1", historyHead.Key)
