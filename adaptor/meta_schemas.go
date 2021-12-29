@@ -19,8 +19,11 @@ const (
 	ModelTypeEventAccount  ModelType = "event_account"  // 事件账户
 	ModelTypeEventSet      ModelType = "event"          // 事件集
 
-	ModelTypeLedgerBlockLink ModelType = "ledger-block" // 账本-区块
-	ModelTypeBlockTxLink     ModelType = "block-tx"     // 区块-交易
+	ModelTypeLedgerBlockLink    ModelType = "ledger-block"     // 账本-区块
+	ModelTypeBlockTxLink        ModelType = "block-tx"         // 区块-交易
+	ModelTypeLedgerTxLink       ModelType = "ledger-tx"        // 账本-交易
+	ModelTypeTxKvLink           ModelType = "tx-kv"            // 交易-键值
+	ModelTypeEndpointUserTxLink ModelType = "endpoint_user-tx" // 终端用户-交易
 )
 
 func PredictTo(t ModelType, name string) string {
@@ -57,5 +60,8 @@ var (
 		Add(dgraph_helper.NewSchemaStringTrigramIndex(PredictTo(ModelTypeEventSet, "topic"))).
 		Add(dgraph_helper.NewSchemaIntIndex(PredictTo(ModelTypeEventSet, "sequence"))).
 		Add(dgraph_helper.NewSchemaUidsIndex(string(ModelTypeLedgerBlockLink))).
-		Add(dgraph_helper.NewSchemaUidsIndex(string(ModelTypeBlockTxLink)))
+		Add(dgraph_helper.NewSchemaUidsIndex(string(ModelTypeLedgerTxLink))).
+		Add(dgraph_helper.NewSchemaUidsIndex(string(ModelTypeBlockTxLink))).
+		Add(dgraph_helper.NewSchemaUidsIndex(string(ModelTypeTxKvLink))).
+		Add(dgraph_helper.NewSchemaUidsIndex(string(ModelTypeEndpointUserTxLink)))
 )

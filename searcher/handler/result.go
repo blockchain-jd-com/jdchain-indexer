@@ -8,15 +8,16 @@ import (
 
 type QueryResult struct {
 	combine       bool
-	Ledgers       query.Ledgers       `json:"Ledgers,omitempty"`
-	Blocks        query.Blocks        `json:"blocks,omitempty"`
-	Txs           query.Transactions  `json:"txs,omitempty"`
-	Users         query.Users         `json:"users,omitempty"`
-	Accounts      query.Accounts      `json:"accounts,omitempty"`
-	Contracts     query.Contracts     `json:"contracts,omitempty"`
-	KVs           query.WriteKvs      `json:"kvs,omitempty"`
-	EventAccounts query.EventAccounts `json:"event_accounts,omitempty"`
-	Events        query.Events        `json:"events,omitempty"`
+	Ledgers       query.Ledgers         `json:"Ledgers,omitempty"`
+	Blocks        query.Blocks          `json:"blocks,omitempty"`
+	Txs           query.Transactions    `json:"txs,omitempty"`
+	Users         query.Users           `json:"users,omitempty"`
+	Accounts      query.Accounts        `json:"accounts,omitempty"`
+	Contracts     query.Contracts       `json:"contracts,omitempty"`
+	KVs           query.WriteKvs        `json:"kvs,omitempty"`
+	EventAccounts query.EventAccounts   `json:"event_accounts,omitempty"`
+	Events        query.Events          `json:"events,omitempty"`
+	KvUsers       query.KvEndpointUsers `json:"kvusers,omitempty"`
 }
 
 func (result *QueryResult) ToJSON(writer *bufio.Writer) (e error) {
@@ -125,6 +126,19 @@ func (result *QueryResult) toCombineJSON(writer *bufio.Writer) (e error) {
 		needComma = true
 	}
 
+	if result.KvUsers != nil {
+		if needComma {
+			_, e = writer.WriteString(",")
+		}
+		_, e = writer.WriteString(` "kv_users":`)
+		if len(result.KvUsers) <= 0 {
+			_, e = writer.WriteString("[]")
+		} else {
+			e = result.writeProp(writer, result.KvUsers)
+		}
+		needComma = true
+	}
+
 	_, e = writer.WriteString("}")
 
 	return e
@@ -173,6 +187,12 @@ func (result *QueryResult) toSingleJSON(writer *bufio.Writer) (e error) {
 			_, e = writer.WriteString("[]")
 		} else {
 			e = result.writeProp(writer, result.EventAccounts)
+		}
+	} else if result.KvUsers != nil {
+		if len(result.KvUsers) <= 0 {
+			_, e = writer.WriteString("[]")
+		} else {
+			e = result.writeProp(writer, result.KvUsers)
 		}
 	}
 

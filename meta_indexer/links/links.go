@@ -47,6 +47,9 @@ func ToLinks(ld *worker.LedgerData) (all []dgraph_helper.MutationData) {
 	all = append(all, ledgerBlockLink)
 
 	for _, tx := range ld.Txs {
+		ledgerTxLink := NewLedgerTxLink(ledger, tx.Hash)
+		all = append(all, ledgerTxLink)
+
 		blockTxLink := NewBlockTxLink(blockInfo.Hash, tx.Hash)
 		all = append(all, blockTxLink)
 

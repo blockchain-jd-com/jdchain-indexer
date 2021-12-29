@@ -183,3 +183,14 @@ type Event struct {
 	Content  string `json:"content"`
 	Sequence int64  `json:"sequence"`
 }
+
+type KvEndpointUser struct {
+	Account     string `json:"account"`
+	Key         string `json:"key"`
+	Version     int64  `json:"version"`
+	User        string `json:"user"`
+	Tx          string `json:"tx"`
+	BlockHeight int64  `json:"block_height"`
+}
+
+type KvEndpointUsers []KvEndpointUser
