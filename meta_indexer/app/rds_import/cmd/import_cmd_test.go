@@ -26,7 +26,7 @@ func Test_startServer(t *testing.T) {
 func Test_userTask(t *testing.T) {
 
 	host := "http://127.0.0.1:8080"
-	ledger := "j5nfkEvfyHidqk9MHJZGFZxVbLBfy23M4TQwcqP6fFewkF"
+	ledger := "j5tP7oJ8DDJNHQPycAWYWuGSVsa39GVBqjbEgCegRyDQsG"
 
 	userCount, err := adaptor.GetTotalUserCountInLedgerFromServer(host, ledger)
 	if err == nil {
@@ -66,4 +66,23 @@ func Test_accountTask(t *testing.T) {
 		}
 	}
 
+}
+
+func Test_addressInfoTask(t *testing.T) {
+
+	host := "http://127.0.0.1:8080"
+	ledger := "j5tP7oJ8DDJNHQPycAWYWuGSVsa39GVBqjbEgCegRyDQsG"
+
+	// 1 user  2 dataaccount 3 eventaccount 4 contract
+	task := tasks.NewAddressInfoTask(host, ledger, "LdeNsK6ynUv6ZWiEZbC7KThaKvaLBeK1VmphF", 1)
+	task.Do()
+
+	task = tasks.NewAddressInfoTask(host, ledger, "LdeNfTMPrkQn6WUp4MHeZgT7DS89gZ6DxAGF7", 2)
+	task.Do()
+
+	task = tasks.NewAddressInfoTask(host, ledger, "LdeNgwHPs2eXw5UmKFY8fcUJ3NdqwP2ZJHRL3", 3)
+	task.Do()
+
+	task = tasks.NewAddressInfoTask(host, ledger, "LdeNgmTPVk15xLjp8p4vpz4V5wx2bGmw2GVTt", 4)
+	task.Do()
 }

@@ -28,6 +28,8 @@ mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p $MYSQL_PASSWORD  < ./jdcha
 * `--dsn`:  数据库数据源名称。 示例: *mysql*: `root:root@tcp(127.0.0.1:3306)/jdchain`
 * `--from`:  导入区块起始高度。 默认值: `0`
 * `--to`:  导入区块截止高度。 默认值: `-1`, 当前账本最新高度
+* `--monitor`: 开启实时监控， 当有新区块产生时，实时导入数据。 目前该选项只能实时监听区块和交易数据
+* `--refresh`: 开启实时监控， 刷新用户、数据账户、事件账户、合约等数据， 默认10, 单位分钟
 
 
 

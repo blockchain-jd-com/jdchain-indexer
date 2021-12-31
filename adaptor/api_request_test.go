@@ -50,7 +50,7 @@ func TestGetTxList(t *testing.T) {
 }
 
 func TestGetUserCount(t *testing.T) {
-	c, err := getTotalUserCountInLedgerFromServer(apiHostInTest, ledgerDefault.Hash)
+	c, err := GetTotalUserCountInLedgerFromServer(apiHostInTest, ledgerDefault.Hash)
 	assert.Nil(t, err)
 	assert.True(t, c > 0)
 	ledgerDefault.userCount = c
@@ -58,7 +58,7 @@ func TestGetUserCount(t *testing.T) {
 }
 
 func TestGetAccountCount(t *testing.T) {
-	c, err := getTotalAccountCountInLedgerFromServer(apiHostInTest, ledgerDefault.Hash)
+	c, err := GetTotalAccountCountInLedgerFromServer(apiHostInTest, ledgerDefault.Hash)
 	assert.Nil(t, err)
 	assert.True(t, c > 0)
 	ledgerDefault.userCount = c

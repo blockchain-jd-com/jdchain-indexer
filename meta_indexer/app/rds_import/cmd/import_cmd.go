@@ -44,6 +44,8 @@ type ImportArgs struct {
 	DSN       string `cli:"*dsn" usage:"database dsn"`
 	BlockFrom int64  `cli:"from" usage:"start from block" dft:"0"`
 	BlockTo   int64  `cli:"to" usage:"stop at block" dft:"-1"`
+	Monitor   bool   `cli:"monitor" usage:"monitor real time ledger data trigger import" dft:"false"`
+	Refresh   int64  `cli:"refresh" usage:"refresh user,contract,dataAccount data" dft:"10"`
 }
 
 type ImportHandler struct {
@@ -96,6 +98,53 @@ func startServer(cmd *ImportArgs) {
 	<-completeCh
 
 	zlog.Infof("All Import Task Done. Total Tasks: %d, Error Tasks: %d", atomic.LoadInt64(&totalTask), atomic.LoadInt64(&errorTask))
+
+	if cmd.Monitor {
+		zlog.Infof("Begin Monitor Task.....")
+		go startMonitorTask(dataWorker, cmd.ApiHost, cmd.Ledger, to, cmd.Refresh, completeCh)
+		// go startMonitorUserAccount(dataWorker, cmd.ApiHost, cmd.Ledger)
+		// go startMonitorUserAccount(dataWorker, cmd.ApiHost, cmd.Ledger)
+		// go startMonitorUserAccount(dataWorker, cmd.ApiHost, cmd.Ledger)
+		// go startMonitorUserAccount(dataWorker, cmd.ApiHost, cmd.Ledger)
+		<-completeCh
+	}
+}
+
+func startMonitorTask(dataWorker *worker.ConcurrentWorker, apiHost, ledger string, fromBlockHeight int64, refresh int64, done chan interface{}) {
+	ticker := time.NewTicker(5 * time.Second)
+	refreshTicker := time.NewTicker(time.Duration(refresh * int64(time.Minute)))
+	currentBlockHeight := fromBlockHeight
+	for {
+		select {
+		case <-ticker.C:
+			aLedger, err := adaptor.GetLedgerDetailFromServer(apiHost, ledger)
+			if err != nil {
+				zlog.Infof("Query Ledger error: %s", err.Error())
+			} else {
+				newHeight := aLedger.Height
+				if newHeight > currentBlockHeight {
+					zlog.Infof("Fetch Height Data from %d to %d", currentBlockHeight+1, newHeight)
+					go fetchRealTimeBlockData(dataWorker, apiHost, ledger, currentBlockHeight+1, newHeight)
+					atomic.CompareAndSwapInt64(&currentBlockHeight, currentBlockHeight, newHeight)
+				}
+			}
+
+		case <-refreshTicker.C:
+			refrshData(dataWorker, apiHost, ledger)
+		}
+	}
+}
+
+func refrshData(dataWorker *worker.ConcurrentWorker, apiHost, ledger string) {
+	addContractTasks(dataWorker, apiHost, ledger)
+	addUserTasks(dataWorker, apiHost, ledger)
+	addDataAccountTasks(dataWorker, apiHost, ledger)
+	addEventAccountTasks(dataWorker, apiHost, ledger)
+}
+
+func fetchRealTimeBlockData(dataWorker *worker.ConcurrentWorker, apiHost, ledger string, fromHeight, toHeight int64) {
+	addBlockTasks(dataWorker, apiHost, ledger, fromHeight, toHeight)
+	addTxTasks(dataWorker, apiHost, ledger, fromHeight, toHeight)
 }
 
 func addAllTasks(dataWorker *worker.ConcurrentWorker, apiHost, ledger string, fromHeight, toHeight int64) {
@@ -292,6 +341,35 @@ func processCompleteTasks(completeTasks []worker.Task, db *gorm.DB) {
 			dataAccounts = append(dataAccounts, dataAccountTask.Accounts()...)
 			kvs = append(kvs, dataAccountTask.KVS()...)
 		}
+
+		if addressInfoTask, ok := task.(*tasks.AddressInfoTask); ok {
+
+			if addressInfoTask.UserData != nil {
+				users = append(users, addressInfoTask.UserData)
+			}
+
+			if addressInfoTask.ContractData != nil {
+				contracts = append(contracts, addressInfoTask.ContractData)
+			}
+
+			if addressInfoTask.DataAccount != nil {
+				dataAccounts = append(dataAccounts, addressInfoTask.DataAccount)
+			}
+
+			if len(addressInfoTask.DataAccountKV) != 0 {
+				kvs = append(kvs, addressInfoTask.DataAccountKV...)
+			}
+
+			if addressInfoTask.EventAccount != nil {
+				eventAccounts = append(eventAccounts, addressInfoTask.EventAccount)
+			}
+
+			if len(addressInfoTask.EventAccountKV) != 0 {
+				events = append(events, addressInfoTask.EventAccountKV...)
+			}
+
+		}
+
 	}
 
 	if len(blocks) > 0 {
