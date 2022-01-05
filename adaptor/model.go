@@ -290,7 +290,7 @@ func (wh *WriteHistory) Mutations() (mutations dgraph_helper.Mutations) {
 	mutations = mutations.Add(
 		dgraph_helper.NewMutation(
 			dgraph_helper.MutationItemEmpty(wh.UniqueMutationName()),
-			dgraph_helper.MutationItemValue(wh.Key),
+			dgraph_helper.MutationItemValue(wh.DataSetAddress),
 			dgraph_helper.MutationPredict(PredictTo(ModelTypeKV, "data_account_address")),
 		),
 		dgraph_helper.NewMutation(

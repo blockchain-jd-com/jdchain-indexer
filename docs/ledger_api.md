@@ -1,6 +1,6 @@
 ## 区块链基础数据检索API
 
-[全局搜索](#全局搜索)， [合约搜索](#合约搜索)，[合约数量](#合约数量)，[区块搜索](#区块搜索)，[区块数量](#区块数量)，[交易搜索](#交易搜索)，[交易数量](#交易数量)，[终端账户-交易搜索](#终端账户-交易搜索)，[终端账户-交易数量](#终端账户-交易数量)，[用户账户搜索](#用户账户搜索)，[用户账户数量](#用户账户数量)，[数据账户搜索](#数据账户搜索)，[数据账户数量](#数据账户数量)，[事件账户搜索](#事件账户搜索)，[事件账户数量](#事件账户数量)，[账本列表](#账本列表)，[区块分页列表](#区块分页列表)，[交易分页列表](#交易分页列表)，[用户账户分页列表](#用户账户分页列表)，[合约分页列表](#合约分页列表)，[数据账户分页列表](#数据账户分页列表)，[事件账户分页列表](#事件账户分页列表)，[按时间查询交易](#按时间查询交易)
+[全局搜索](#全局搜索)， [合约搜索](#合约搜索)，[合约数量](#合约数量)，[区块搜索](#区块搜索)，[区块数量](#区块数量)，[交易搜索](#交易搜索)，[交易数量](#交易数量)，[终端账户-交易搜索](#终端账户-交易搜索)，[终端账户-交易数量](#终端账户-交易数量)，[用户账户搜索](#用户账户搜索)，[用户账户数量](#用户账户数量)，[数据账户搜索](#数据账户搜索)，[数据账户数量](#数据账户数量)，[事件账户搜索](#事件账户搜索)，[事件账户数量](#事件账户数量)，[账本列表](#账本列表)，[区块分页列表](#区块分页列表)，[交易分页列表](#交易分页列表)，[用户账户分页列表](#用户账户分页列表)，[合约分页列表](#合约分页列表)，[数据账户分页列表](#数据账户分页列表)，[事件账户分页列表](#事件账户分页列表)，[按时间查询交易](#按时间查询交易)，[KV-终端用户](#KV-终端用户)
 
 
 ### 全局搜索
@@ -538,6 +538,39 @@ $ curl 'http://localhost:10001/ledgers/j5ufkRQxKeN7VAwJzh1pBoZbUEsozLuSWnQNoBGuY
          "execution_state" : "SUCCESS",
          "hash" : "j5vYf3PTy9w459c56TFcXJ1P2s2fuRSn6QJ2cBtfXHDGH8",
          "time" : 1635767065400
+      }
+   ],
+   "success" : true
+}
+```
+
+### KV-终端用户
+
+| Method | Url |
+| ------ | ------ |
+|GET |  /ledgers/:ledger/kvs/users/search |
+
+参数列表：
+| 名称 | 位置 | 类型 | 类型 |
+| ------ | ------ | ------ |
+| ledger   | path |string |账本哈希 |
+| account   | path |string |数据账户地址 |
+| keyword   | path |string |KV键值 |
+| from  | path |int | 起始序号，包含 |
+| count     | form |int    | 最大返回条数，最大1000 |
+
+测试用例：
+```bash
+$ curl 'http://localhost:10001/ledgers/j5xbtaBz6pvHfcYgfZJoUTmHS1aTbMnCiQ3ffbew8A7UuY/kvs/users/search?account=LdeP2ji8PR1DPsLt5NoFeiBnhpckrLHgCJge6&keyword=imuge&from=0&count=10' | json_pp
+{
+   "data" : [
+      {
+         "key" : "imuge", // 键值
+         "user" : "LdeNyibeafrAQXgHjBxgQxoLbna6hL4BcXZiw", // 终端用户
+         "block_height" : 2, // 区块高度
+         "version" : -1, // KV版本
+         "tx" : "j5qBR7tiVcM4B3pYCC9CMCS5EEFncqRTy3szJUvMuLqQpy", // 交易哈希
+         "account" : "LdeP2ji8PR1DPsLt5NoFeiBnhpckrLHgCJge6" // 数据账户地址
       }
    ],
    "success" : true

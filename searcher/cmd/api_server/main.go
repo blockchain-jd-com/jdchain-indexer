@@ -90,6 +90,8 @@ func startServer(dgraphHost string, listeningPort, cacheSize int) {
 	r.GET("/ledgers/:ledger/eventAccounts/search", handler.HandleQueryEventAccountByHash)
 	r.GET("/ledgers/:ledger/eventAccounts/count/search", handler.HandleQueryEventAccountCountByHash)
 
+	r.GET("/ledgers/:ledger/kvs/users/search", handler.HandleQueryEndpointUserByKv)
+
 	if err := r.Run(fmt.Sprintf("0.0.0.0:%d", listeningPort)); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

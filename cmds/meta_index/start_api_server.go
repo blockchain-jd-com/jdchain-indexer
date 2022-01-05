@@ -90,6 +90,8 @@ func StartApiServer(dgraphHost string, listeningHost string, listeningPort int, 
 	r.GET("/ledgers/:ledger/eventAccounts/search", handler.HandleQueryEventAccountByHash)
 	r.GET("/ledgers/:ledger/eventAccounts/count/search", handler.HandleQueryEventAccountCountByHash)
 
+	r.GET("/ledgers/:ledger/kvs/users/search", handler.HandleQueryKvEndpointUser)
+
 	err := r.Run(fmt.Sprintf("%s:%d", listeningHost, listeningPort))
 	if err != nil {
 		os.Exit(1)
