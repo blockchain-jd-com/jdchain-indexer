@@ -118,3 +118,8 @@ argus drop  --dgraph 127.0.0.1:9080
 参数：
 
 - `dgraph` `Dgraph`服务地址
+
+### 导出数据到MySQL
+
+使用工具将`JD Chain`数据[导入到关系型数据库](meta_indexer/app/rds_import/readme.md)中， 目前支持的数据库包括: `MySQL`
+

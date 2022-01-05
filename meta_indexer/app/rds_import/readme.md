@@ -1,7 +1,7 @@
-## Import JdChain to RDS
+## Import JD Chain to RDS
 
 
-使用工具将JdChain数据导入到关系型数据库中， 目前支持的数据库包括: `MySQL`
+使用工具将`JD Chain`数据导入到关系型数据库中， 目前支持的数据库包括: `MySQL`
 
 ### 使用说明
 
@@ -15,7 +15,7 @@
 mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p $MYSQL_PASSWORD  < ./jdchain.sql
 ```
 
-2. 执行命令导入JdChain数据到数据库
+2. 执行命令导入`JD Chain`数据到数据库
 
 ```sh
 ./rds_import --ledger-host $API_HOST  --ledger $LEDGER --dsn $DATASOURCE_NAME --from $FROM --to $TO 
@@ -29,7 +29,7 @@ mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p $MYSQL_PASSWORD  < ./jdcha
 * `--from`:  导入区块起始高度。 默认值: `0`
 * `--to`:  导入区块截止高度。 默认值: `-1`, 当前账本最新高度
 * `--monitor`: 开启实时监控， 当有新区块产生时，实时导入数据。 目前该选项只能实时监听区块和交易数据
-* `--refresh`: 开启实时监控， 刷新用户、数据账户、事件账户、合约等数据， 默认10, 单位分钟
+* `--refresh`: 开启实时监控， 刷新用户、数据账户、事件账户、合约等数据， 默认`10`, 单位分钟
 
 
 

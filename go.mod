@@ -9,7 +9,7 @@ require (
 	github.com/elliotchance/pie v1.14.0
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-ego/riot v0.0.0-20190307162011-3d971d90bc83
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gopherjs/gopherjs v0.0.0-20211030200517-e8a8f89b521b // indirect
 	github.com/imkira/go-interpol v1.1.0
 	github.com/jinzhu/now v1.1.4 // indirect
@@ -27,8 +27,8 @@ require (
 	google.golang.org/grpc v1.38.0
 	google.golang.org/grpc/examples v0.0.0-20211029185836-d6aca733b397 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
-	gorm.io/driver/mysql v1.2.1 // indirect
-	gorm.io/gorm v1.22.4 // indirect
+	gorm.io/driver/mysql v1.2.1
+	gorm.io/gorm v1.22.4
 )
 
 go 1.13
