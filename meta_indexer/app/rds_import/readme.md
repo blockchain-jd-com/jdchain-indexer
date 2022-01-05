@@ -18,7 +18,7 @@ mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p $MYSQL_PASSWORD  < ./jdcha
 2. 执行命令导入`JD Chain`数据到数据库
 
 ```sh
-./rds_import --ledger-host $API_HOST  --ledger $LEDGER --dsn $DATASOURCE_NAME --from $FROM --to $TO 
+./argus ledger-import --ledger-host $API_HOST  --ledger $LEDGER --dsn $DATASOURCE_NAME --from $FROM --to $TO 
 ```
 
 参数说明:

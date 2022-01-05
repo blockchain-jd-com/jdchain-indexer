@@ -1,5 +1,7 @@
 module git.jd.com/jd-blockchain/explorer
 
+go 1.13
+
 require (
 	github.com/Bowery/prompt v0.0.0-20190916142128-fa8279994f75 // indirect
 	github.com/RoseRocket/xerrs v1.0.0
@@ -12,7 +14,6 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gopherjs/gopherjs v0.0.0-20211030200517-e8a8f89b521b // indirect
 	github.com/imkira/go-interpol v1.1.0
-	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/mkideal/cli v0.0.3-0.20190312150029-41df2d00b0ed
 	github.com/mkideal/pkg v0.1.2 // indirect
 	github.com/mr-tron/base58 v1.1.1 // indirect
@@ -30,5 +31,3 @@ require (
 	gorm.io/driver/mysql v1.2.1
 	gorm.io/gorm v1.22.4
 )
-
-go 1.13

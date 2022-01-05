@@ -57,7 +57,7 @@ func (blockTask *BlockTask) Do() error {
 		ConfigurationsSetHash: block.AdminAccountHash,
 		DataAccountsSetHash:   block.DataAccountSetHash,
 		EventAccountsSetHash:  block.UserEventSetHash,
-		BlockTimestamp:        time.UnixMilli(block.Time),
+		BlockTimestamp:        time.Unix(block.Time/1000, block.Time%1000*int64(time.Millisecond)),
 	}
 
 	blockTask.data = &dbBlock

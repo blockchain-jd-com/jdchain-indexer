@@ -5,6 +5,7 @@ import (
 	"git.jd.com/jd-blockchain/explorer/cmds/drop_db"
 	"git.jd.com/jd-blockchain/explorer/cmds/meta_index"
 	"git.jd.com/jd-blockchain/explorer/cmds/value_index"
+	rdscmd "git.jd.com/jd-blockchain/explorer/meta_indexer/app/rds_import/cmd"
 	"github.com/mkideal/cli"
 	"os"
 	"strings"
@@ -27,6 +28,7 @@ func main() {
 		cli.Tree(meta_index.UpdateSchema),
 		cli.Tree(value_index.Root),
 		cli.Tree(drop_db.DropDB),
+		cli.Tree(rdscmd.Import),
 		//cli.Tree(task_monitor.Root),
 	).Run(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err)

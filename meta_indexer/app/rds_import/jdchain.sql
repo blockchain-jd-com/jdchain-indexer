@@ -1,4 +1,6 @@
-CREATE DATABASE `jdchain` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE IF NOT EXISTS `jdchain` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+
+USE `jdchain`;
 
 DROP TABLE IF EXISTS `jdchain_blocks`;
 DROP TABLE IF EXISTS `jdchain_contracts`;
