@@ -32,6 +32,7 @@ var (
             {
                 contract-address:contract-address
                 contract-public_key:contract-public_key
+				contract-lang:contract-lang
             }
         }
     `
@@ -43,6 +44,7 @@ var (
             {
                 contract-address:contract-address
                 contract-public_key:contract-public_key
+				contract-lang:contract-lang
             }
         }
     `

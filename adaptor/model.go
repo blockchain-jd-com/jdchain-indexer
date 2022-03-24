@@ -138,11 +138,15 @@ func (tx *Transaction) Mutations() (mutations dgraph_helper.Mutations) {
 	return
 }
 
-func newContractDeployOperation(address, pubKey string, version int64) *ContractDeployOperation {
+func newContractDeployOperation(address, pubKey string, version int64, lang string) *ContractDeployOperation {
+	if len(lang) == 0 {
+		lang = "Java"
+	}
 	return &ContractDeployOperation{
 		Address:   address,
 		PublicKey: pubKey,
 		Version:   version,
+		Lang:      lang,
 	}
 }
 
@@ -150,6 +154,7 @@ type ContractDeployOperation struct {
 	Address   string
 	PublicKey string
 	Version   int64
+	Lang   	  string
 }
 
 func (contract *ContractDeployOperation) UniqueMutationName() string {
@@ -172,6 +177,11 @@ func (contract *ContractDeployOperation) Mutations() (mutations dgraph_helper.Mu
 			dgraph_helper.MutationItemEmpty(contract.UniqueMutationName()),
 			dgraph_helper.MutationItemValue(strconv.FormatInt(contract.Version, 10)),
 			dgraph_helper.MutationPredict(PredictTo(ModelTypeContract, "version")),
+		),
+		dgraph_helper.NewMutation(
+			dgraph_helper.MutationItemEmpty(contract.UniqueMutationName()),
+			dgraph_helper.MutationItemValue(contract.Lang),
+			dgraph_helper.MutationPredict(PredictTo(ModelTypeContract, "lang")),
 		),
 	)
 	return

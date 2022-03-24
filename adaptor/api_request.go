@@ -363,7 +363,8 @@ func parseOperations(txHash string, operations []gjson.Result) []interface{} {
 			uo := newContractDeployOperation(
 				contentResult.Get("contractID.address").String(),
 				contentResult.Get("contractID.pubKey").String(),
-				contentResult.Get("chainCodeVersion").Int())
+				contentResult.Get("chainCodeVersion").Int(),
+				contentResult.Get("lang").String())
 			contents = append(contents, uo)
 		case "com.jd.blockchain.ledger.ContractEventSendOperation": // 合约调用
 			uo := newContractEventOperation(
