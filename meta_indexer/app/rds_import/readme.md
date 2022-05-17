@@ -12,13 +12,13 @@
 示例： 初始化数据结构到`MySQL`中:
 
 ```sh
-mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p $MYSQL_PASSWORD  < ./jdchain.sql
+mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p $MYSQL_PASSWORD  < ./sql/jdchain.sql
 ```
 
 2. 执行命令导入`JD Chain`数据到数据库
 
 ```sh
-./argus ledger-import --ledger-host $API_HOST  --ledger $LEDGER --dsn $DATASOURCE_NAME --from $FROM --to $TO 
+./argus ledger-import --ledger-host $API_HOST  --ledger $LEDGER --dsn $DATASOURCE_NAME --from $FROM --to $TO --monitor --refresh 1
 ```
 
 参数说明:
