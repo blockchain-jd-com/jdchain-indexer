@@ -1,11 +1,13 @@
 # 使用说明
 
-穿透式检索`Argus`提供`JD Chain`区块链基础数据索引，自定义键值索引服务。
+穿透式检索`jdchain-indexer`（`Argus`）提供`JD Chain`区块链基础数据索引、自定义键值索引服务。
 
 版本对应关系：
-|  jdchain-indexer   | JD Chain  |
+|  jdchain-indexer（Argus）   | JD Chain  |
 |  ----  | ----  |
 | 0.9.0  | 1.6.0 |
+
+**编译此项目获取`Argus`可执行文件**
 
 ## 安装并启动 Dgraph
 
